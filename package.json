@@ -1,6 +1,6 @@
 {
   "name": "webpack-clean-manifest-plugin",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Webpack plugin for clearing a destination folder keeping files listed in a manifest",
   "main": "lib/index.js",
   "scripts": {
@@ -16,6 +16,7 @@
   "author": "François `cahnory` Germain <cahnory@gmail.com> (http://www.cahnory.fr)",
   "license": "MIT",
   "dependencies": {
+    "babel-polyfill": "^6.13.0",
     "on-build-webpack": "^0.1.0"
   },
   "devDependencies": {

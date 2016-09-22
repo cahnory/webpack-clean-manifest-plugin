@@ -1,3 +1,5 @@
+import polyfill from 'babel-polyfill'
+
 import fs from 'fs'
 import {resolve} from 'path'
 import WebpackOnBuildPlugin from 'on-build-webpack'
