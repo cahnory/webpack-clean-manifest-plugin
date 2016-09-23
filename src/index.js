@@ -49,7 +49,6 @@ function cleanDirectory(directory, ignore) {
   nbIgnored += removed.length
 
   // remove directory if no ignored path
-  console.log(directory, nbIgnored, fs.readdirSync(directory).length)
   if (!nbIgnored) {
     fs.unlinkSync(directory)
     return true
