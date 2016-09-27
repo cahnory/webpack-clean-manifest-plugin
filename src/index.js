@@ -4,45 +4,43 @@ import fs from 'fs'
 import {resolve} from 'path'
 import WebpackOnBuildPlugin from 'on-build-webpack'
 
-export function WebpackCleanManifestPlugin (directory, manifest) {
-  manifest = resolve(process.cwd(), manifest)
+export function WebpackCleanManifestPlugin (directory, {manifest, exclude}) {
+  manifest  = manifest ? resolve(process.cwd(), manifest) : {}
   directory = resolve(process.cwd(), directory)
+  exclude   = exclude ? [].concat(exclude) : []
 
   return new WebpackOnBuildPlugin(function () {
-    // get last build files to keep them
-    const ignore = Object.values(JSON.parse(fs.readFileSync(manifest, 'utf8')))
-      // get resolved files
-      .map(file => resolve(directory, file))
-      // add manifest to keep it too
-      .concat(manifest)
+    // ignore if manifest does not exist (yet)
+    let manifestExists
+    try {
+      manifestExists = fs.statSync(manifest).isFile()
+    } catch(e) {
+      manifestExists = false
+    }
 
-    cleanDirectory(directory, ignore)
+    if (manifestExists) {
+      // get last build files to keep them
+      const ignore = Object.values(JSON.parse(fs.readFileSync(manifest, 'utf8')))
+        // get resolved files
+        .map(file => resolve(directory, file))
+        // add manifest to keep it too
+        .concat(manifest)
+
+      cleanDirectory(directory, ignore, exclude)
+    }
   })
 }
 
 export default WebpackCleanManifestPlugin
 
-export function clean(directory, manifest) {
-  manifest = resolve(process.cwd(), manifest)
-  directory = resolve(process.cwd(), directory)
-
-  // get last build files to keep them
-  const ignore = Object.values(require(manifest))
-    // get resolved files
-    .map(file => resolve(directory, file))
-    // add manifest to keep it too
-    .concat(manifest)
-
-  cleanDirectory(directory, ignore)
-}
-
-function cleanDirectory(directory, ignore) {
+function cleanDirectory(directory, ignore, exclude) {
   let nbIgnored = 0
   let removed = fs.readdirSync(directory)
     // make paths absolute
     .map(path => resolve(directory, path))
     // remove last build files and count them
-    .filter(path => -1 === ignore.indexOf(path) ? true : !(++nbIgnored))
+    .filter(path => -1 === ignore.indexOf(path) ? true : !++nbIgnored)
+    .filter(path => exclude.find(pattern => pattern.test(path)) ? !++nbIgnored : true)
     // remove cleaned paths
     .filter(path => !cleanPath(path, ignore))
     // and count ignored
