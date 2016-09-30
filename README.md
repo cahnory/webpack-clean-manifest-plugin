@@ -17,7 +17,9 @@ import CleanManifestPlugin from 'webpack-clean-manifest-plugin'
 export default {
   // ...
   plugins: [
-    CleanManifestPlugin('./path/to/clean', './path/to/manifest.json')
+    CleanManifestPlugin('./path/to/clean', {
+      manifest  : './path/to/manifest.json',
+    })
   ]
 }
 ```
