@@ -42,7 +42,7 @@ function cleanDirectory(directory, ignore, exclude) {
     .filter(path => -1 === ignore.indexOf(path) ? true : !++nbIgnored)
     .filter(path => exclude.find(pattern => pattern.test(path)) ? !++nbIgnored : true)
     // remove cleaned paths
-    .filter(path => !cleanPath(path, ignore))
+    .filter(path => !cleanPath(path, ignore, exclude))
     // and count ignored
   nbIgnored += removed.length
 
@@ -65,8 +65,8 @@ function cleanFile(file, ignore) {
   return false
 }
 
-function cleanPath(path, ignore) {
+function cleanPath(path, ignore, exclude) {
   return fs.statSync(path).isDirectory()
-    ? cleanDirectory(path, ignore)
+    ? cleanDirectory(path, ignore, exclude)
     : cleanFile(path, ignore)
 }

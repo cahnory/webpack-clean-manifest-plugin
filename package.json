@@ -1,6 +1,6 @@
 {
   "name": "webpack-clean-manifest-plugin",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Webpack plugin for clearing a destination folder keeping files listed in a manifest",
   "main": "lib/index.js",
   "scripts": {
