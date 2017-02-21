@@ -48,7 +48,7 @@ function cleanDirectory(directory, ignore, exclude) {
 
   // remove directory if no ignored path
   if (!nbIgnored) {
-    fs.unlinkSync(directory)
+    fs.rmdirSync(directory)
     return true
   }
 
